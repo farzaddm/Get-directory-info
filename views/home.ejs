@@ -1,0 +1,21 @@
+<%- include('partials/header.ejs'); %>
+
+
+<body>
+    <h1>Contents of <%= currentPath %></h1>
+    <% if (currentPath !== '/') { %>
+        <h2><a href="<%= path.dirname(currentPath) %>">[UP] ..</a></h2>
+    <% } %>
+    <h2>Directories</h2>
+    <ul>
+      <% directories.forEach(dir => { %>
+        <li><a href="<%= path.join(currentPath, dir) %>"> [DIR] <%= dir %></a></li>
+      <% }); %>
+    </ul>
+    <h2>Files</h2>
+    <ul>
+      <% fileNames.forEach(file => { %>
+        <li><a href="<%= path.join(currentPath, file) %>"> [FILE] <%= file %></a></li>
+      <% }); %>
+    </ul>
+  </body>
