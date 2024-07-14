@@ -76,12 +76,12 @@ web_modules/
 .env
 .env.development.local
 .env.test.local
-.env.local.env.production.local
-
+.env.production.local
+.env.local
 
 #upload folder
-/uploads/*
-!/uploads/.gitignore
+uploads/*
+!uploads/.gitignore
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
