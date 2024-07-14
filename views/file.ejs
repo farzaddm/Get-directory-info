@@ -1,7 +1,10 @@
 <%- include('partials/header.ejs'); %>
 
+
 <body>
-  <h1>Contents of <%= currentPath %></h1>
+  <a href="<%= path.join(currentPath) %>?download=true" class="btn">Download</a>
+  <h2>File Content: <%= currentPath %></h2>
   <pre><%= content %></pre>
+  <br>
   <a href="<%= path.dirname(currentPath) %>">Back</a>
 </body>

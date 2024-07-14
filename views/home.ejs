@@ -1,7 +1,7 @@
 <%- include('partials/header.ejs'); %>
 
-
 <body>
+
     <h1>Contents of <%= currentPath %></h1>
     <% if (currentPath !== '/') { %>
         <h2><a href="<%= path.dirname(currentPath) %>">[UP] ..</a></h2>
@@ -15,7 +15,29 @@
     <h2>Files</h2>
     <ul>
       <% fileNames.forEach(file => { %>
-        <li><a href="<%= path.join(currentPath, file) %>"> [FILE] <%= file %></a></li>
+        <li>
+          <a href="<%= path.join(currentPath, file) %>"><%= file %></a> 
+        </li>
       <% }); %>
     </ul>
+
+    <h2>Upload File</h2>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <input type="file" name="file">
+      <button type="submit">Upload</button>
+    </form>
+    <script>
+      // Get the URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const message = urlParams.get('message');
+  
+      // If there's a message parameter, show it in an alert
+      if (message) {
+        alert(message);
+        // Remove the message parameter from the URL
+        history.replaceState({}, document.title, window.location.pathname);
+      }
+    </script>
   </body>
+
+  

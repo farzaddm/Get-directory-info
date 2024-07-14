@@ -26,5 +26,7 @@ async function checkUser(username, password, callback) {
   } catch (err) {
     return callback(err);
   }
+  // colse database
+  db.close();
 }
 module.exports = { checkUser };
