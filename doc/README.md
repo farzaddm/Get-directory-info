@@ -1,6 +1,6 @@
 # Get System Info
 
-I use MCV model to write my website. Site have avebilty to download, upload file, dark & ligth theme.
+I use MCV model to write my website. Site have Ability to download, upload file, dark & ligth theme.
 
 ## App Structure
 
