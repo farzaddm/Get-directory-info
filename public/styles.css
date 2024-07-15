@@ -1,110 +1,151 @@
 /* google fonts */
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 
-body{
+/* Define CSS variables for both themes */
+:root {
+  --text-color: #444;
+  --link-color: #444;
+  --form-background: #fff;
+  --input-background: #fff;
+  --input-border: #ddd;
+  --button-background: #FEE996;
+  --button-text: #000;
+  --header-color: #999;
+  --background-image: url("./l_bg.jpg");}
+
+body.dark-theme {
+  --text-color: #eee;
+  --link-color: #ff6666;
+  --form-background: #222;
+  --input-background: #333;
+  --input-border: #555;
+  --button-background: #ff6666;
+  --button-text: #000;
+  --header-color: #ff6666;
+  --background-image: url("./d_bg.jpg");
+}
+
+body {
   margin: 20px 40px;
   font-size: 1.2rem;
   letter-spacing: 1px;
-  background-image: url("./bg.jpg");
+  background-color: var(--background-color);
+  color: var(--text-color);
+  background-image: var(--background-image);
   background-attachment: fixed;
   background-size: 100% 100%;
 }
-h1, h2, h3, h4, ul, li, a, p, input, label, button, div, footer{
+
+h1, h2, h3, h4, ul, li, a, p, input, label, button, div, footer {
   margin: 0;
   padding: 0;
   font-family: 'Quicksand', sans-serif;
-  color: #eee;
+  color: var(--text-color);
 }
-ul{
+
+ul {
   list-style-type: none;
 }
-a{
+
+a {
   text-decoration: none;
-  color: #ff6666;
+  color: var(--link-color);
 }
-nav{
+
+nav {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   margin-bottom: 120px;
 }
-nav ul{
+
+nav ul {
   display: flex;
   align-items: center;
 }
-nav li{
+
+nav li {
   margin-left: 20px;
 }
-nav li a{
+
+nav li a {
   text-transform: uppercase;
   font-weight: 700;
   font-size: 0.8em;
   display: block;
   padding: 10px 16px;
   letter-spacing: 2px;
-  color: #ff6666;
 }
-.btn{
+
+.btn {
   border-radius: 36px;
-  background: #000;
+  background: var(--button-background);
+  color: var(--button-text);
 }
-form h2{
+
+form h2 {
   font-size: 2.4em;
   font-weight: 900;
   margin-bottom: 40px;
 }
-form{
+
+form {
   width: 360px;
   margin: 0 auto;
   padding: 30px;
   box-shadow: 1px 2px 3px rgba(0,0,0,0.1);
   border-radius: 10px;
-  background: #222;
-  color: #eee;
+  background: var(--form-background);
 }
-input{
+
+input {
   padding: 10px 12px;
   border-radius: 4px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--input-border);
   font-size: 1em;
   width: 100%;
-  background: #333; /* Dark input background */
-  color: #eee;
+  background: var(--input-background);
+  color: var(--text-color);
 }
-label{
+
+label {
   display: block;
   margin: 20px 0 10px;
 }
-button{
+
+button {
   margin-top: 30px;
   border-radius: 36px;
-  background: #ff6666;
-  border:0;
+  background: var(--button-background);
+  border: 0;
   text-transform: uppercase;
   font-weight: 700;
   font-size: 0.8em;
   display: block;
   padding: 10px 16px;
   letter-spacing: 2px;
-  color: #000;
+  color: var(--button-text);
 }
-header{
+
+header {
   display: flex;
   align-items: center;
 }
-header h3{
+
+header h3 {
   font-size: 1.6em;
   margin-bottom: 10px;
   margin-left: 2px;
-  color: #ff6666;
+  color: var(--header-color);
 }
-header .btn{
+
+header .btn {
   margin-top: 20px;
   padding: 12px 18px;
   text-transform: uppercase;
   font-weight: bold;
   display: inline-block;
   font-size: 0.8em;
-  background: #ff6666; 
-  color: #000;
+  background: var(--button-background);
+  color: var(--button-text);
 }
