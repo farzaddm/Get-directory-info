@@ -2,7 +2,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const authController = require("./controller/authController");
 const controller = require("./controller/controller");
-const { requireAuth } = require("./middleware/authMiddleware");
+const { requireAuth, checkRole } = require("./middleware/authMiddleware");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 //=====================================================================================
@@ -23,7 +23,7 @@ app.get("/login", (req, res) => res.render("login"));
 app.post("/login", authController.login_post);
 app.get("/logout", authController.logout_get);
 app.get("*", requireAuth, controller.processPathRequest);
-app.post("/upload", requireAuth, upload.single("file"), (req, res) => {
+app.post("/upload", requireAuth, checkRole('admin'), upload.single("file"), (req, res) => {
   if (!req.file) {
     return res.status(400).send("No file uploaded.");
   }

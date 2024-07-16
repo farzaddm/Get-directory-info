@@ -11,6 +11,7 @@ const requireAuth = (req, res, next) => {
         console.log(err.message);
         res.redirect("/login");
       } else {
+        req.user = decodedToken;
         next();
       }
     });
@@ -19,5 +20,17 @@ const requireAuth = (req, res, next) => {
   }
 };
 
+// check user access
+const checkRole = (role) => {
+  return (req, res, next) => {
+    const userRole = req.user.role;
+    if (userRole === role) {
+      next();
+    } else {
+      res.status(403).send('Access Denied');
+    }
+  };
+};
 
-module.exports = { requireAuth };
+
+module.exports = { requireAuth, checkRole };

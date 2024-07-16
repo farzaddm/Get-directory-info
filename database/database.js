@@ -8,7 +8,7 @@ const db = new sqlite3.Database("./database/database.db");
 async function checkUser(username, password, callback) {
   try {
     const row = await new Promise((resolve, reject) => {
-      db.get("SELECT password FROM user WHERE username = ?", [username], (err, row) => {
+      db.get("SELECT password, role FROM user WHERE username = ?", [username], (err, row) => {
           // operation failed
           if (err) reject(err);
           // operation was succesful
@@ -16,13 +16,13 @@ async function checkUser(username, password, callback) {
         }
       );
     });
-
+    console.log(row);
     if (!row) {
       return callback(null, false);
     }
 
     const match = await bcrypt.compare(password, row.password);
-    return callback(null, match);
+    return callback(null, match ? { username, role: row.role } : false);
   } catch (err) {
     return callback(err);
   }

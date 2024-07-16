@@ -6,8 +6,8 @@ const { checkUser } = require("../database/database");
 
 //create json web token
 const maxAge = 3 * 24 * 60 * 60;
-const createToken = (username) => {
-  return jwt.sign({ id: username }, "farzad dehghan", {
+const createToken = (username, role) => {
+  return jwt.sign({ id: username, role: role }, "farzad dehghan", {
     expiresIn: maxAge, // it's in s
   });
 };
@@ -17,17 +17,17 @@ module.exports.login_get = (req, res) => {
 };
 
 module.exports.login_post = (req, res) => {
-  console.log(req.body);
   const { username, password } = req.body;
+  console.log(req.body)
   // check authentication
-  checkUser(username, password, (err, exists) => {
+  checkUser(username, password, (err, user) => {
     if (err) {
       return console.error(err.message);
     }
 
-    if (exists) {
+    if (user) {
       console.log("User exists and password matched!");
-      const token = createToken(username);
+      const token = createToken(username, user.role);
       res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
       res.status(200).json({ user: username });
     } else {
