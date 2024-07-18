@@ -11,7 +11,8 @@
   --button-background: #FEE996;
   --button-text: #000;
   --header-color: #999;
-  --background-image: url("./l_bg.jpg");}
+  --background-image: url("./l_bg.jpg");
+}
 
 body.dark-theme {
   --text-color: #eee;
@@ -148,4 +149,63 @@ header .btn {
   font-size: 0.8em;
   background: var(--button-background);
   color: var(--button-text);
+}
+
+/* Media Queries for Responsiveness */
+
+/* For tablets */
+@media (max-width: 768px) {
+  body {
+    margin: 10px 20px;
+    font-size: 1rem;
+  }
+
+  nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  nav ul {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  nav li {
+    margin-left: 0;
+    margin-bottom: 10px;
+  }
+
+  form {
+    width: 100%;
+    padding: 20px;
+  }
+}
+
+/* For mobile phones */
+@media (max-width: 480px) {
+  nav {
+    margin-bottom: 60px;
+  }
+
+  form h2 {
+    font-size: 2em;
+  }
+
+  button {
+    padding: 10px 12px;
+    font-size: 0.7em;
+  }
+
+  header h3 {
+    font-size: 1.4em;
+  }
+
+  header .btn {
+    padding: 10px 14px;
+    font-size: 0.7em;
+  }
+
+  body {
+    margin: 5px 10px;
+  }
 }

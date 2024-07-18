@@ -18,7 +18,7 @@ module.exports.login_get = (req, res) => {
 
 module.exports.login_post = (req, res) => {
   const { username, password } = req.body;
-  console.log(req.body)
+
   // check authentication
   checkUser(username, password, (err, user) => {
     if (err) {

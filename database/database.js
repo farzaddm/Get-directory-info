@@ -16,7 +16,7 @@ async function checkUser(username, password, callback) {
         }
       );
     });
-    console.log(row);
+
     if (!row) {
       return callback(null, false);
     }
