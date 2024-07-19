@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const bcrypt = require("bcrypt");
-const { checkUser } = require("../database/database");
+const { checkUser, signupUser } = require("../database/database");
 //===================================================================================
 
 //create json web token
@@ -33,9 +33,24 @@ module.exports.login_post = (req, res) => {
     } else {
       // send status 400 for when it's not authenticated
       console.log("Invalid username or password.");
-      res.status(400);
+      res.status(400).json({ errors: "Failed to log in" });
     }
   });
+};
+
+module.exports.signup_get = (req, res) => {
+  res.render("signup");
+};
+
+module.exports.signup_post = async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    await signupUser(username, password);
+    res.status(200).json({ user: username });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ errors: "Failed to register user" });
+  }
 };
 
 module.exports.logout_get = (req, res) => {

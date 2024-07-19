@@ -151,6 +151,12 @@ header .btn {
   color: var(--button-text);
 }
 
+#theme-toggle {
+  position: absolute;
+  right: 20px;
+  font-size: 16px;
+}
+
 /* Media Queries for Responsiveness */
 
 /* For tablets */

@@ -22,6 +22,9 @@ app.set("view engine", "ejs");
 app.get("/login", (req, res) => res.render("login"));
 app.post("/login", authController.login_post);
 app.get("/logout", authController.logout_get);
+app.get("/signup", authController.signup_get);
+app.post("/signup", authController.signup_post);
+
 app.get("*", requireAuth, controller.processPathRequest);
 app.post("/upload", requireAuth, checkRole('admin'), upload.single("file"), (req, res) => {
   if (!req.file) {
