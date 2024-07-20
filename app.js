@@ -15,7 +15,7 @@ app.use(express.static("public"));
 app.use(cookieParser());
 app.use(bodyParser());
 
-// set authentications status for all routes to show button at the top
+// set authentications status for all routes
 app.use(setAuthStatus);
 
 // view engine

@@ -1,10 +1,15 @@
 const fs = require("fs");
 const path = require("path");
 //===================================================================================
-
+const baseUserDir = "/home";
 
 module.exports.processPathRequest = (req, res) => {
   const currentPath = path.join("/", req.path);
+
+  // check the role and only show user the home directory
+  if (res.locals.role !== "admin" && !currentPath.startsWith(baseUserDir)) {
+    return res.status(403).send("Access denied, You can only see '/home'");
+  }
 
   // checking the path is for directory or file
   fs.stat(currentPath, (err, stats) => {
