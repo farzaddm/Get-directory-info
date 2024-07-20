@@ -10,14 +10,16 @@
 <body>
     <nav>
         <ul>
-            <li><a href="/logout">log out</a></li>
-            <li><a href="/login">log in</a></li>
-            <li><a href="/signup">sign up</a></li>
-
+            <% if (!isAuthenticated) { %>
+                <li><a href="/login">Log In</a></li>
+                <li><a href="/signup">Sign Up</a></li>
+            <% } else { %>
+                <li><a href="/logout">Log Out</a></li>
+            <% } %>
             <button id="theme-toggle" class="btn">Switch Theme</button>
         </ul>
     </nav>
-    <script>
+        <script>
         // Check the stored theme on page load
         document.addEventListener('DOMContentLoaded', (event) => {
             const currentTheme = localStorage.getItem('theme');

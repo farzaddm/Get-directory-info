@@ -27,10 +27,24 @@ const checkRole = (role) => {
     if (userRole === role) {
       next();
     } else {
-      res.status(403).send('Access Denied');
+      res.status(403).send("Access Denied");
     }
   };
 };
 
+const setAuthStatus = (req, res, next) => {
+  const token = req.cookies.jwt;
+  res.locals.isAuthenticated = false;
+  res.locals.role = null;
+  if (token) {
+      jwt.verify(token, 'farzad dehghan', (err, decodedToken) => {
+          if (!err) {
+            res.locals.isAuthenticated = true;
+            res.locals.role = decodedToken.role;
+          }
+      });
+  }
+  next();
+};
 
-module.exports = { requireAuth, checkRole };
+module.exports = { requireAuth, checkRole, setAuthStatus };

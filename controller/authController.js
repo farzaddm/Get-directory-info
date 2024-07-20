@@ -58,3 +58,7 @@ module.exports.logout_get = (req, res) => {
   res.cookie("jwt", "", { maxAge: 1 });
   res.redirect("/");
 };
+
+module.exports.admin_get = (req, res) => {
+  res.render('admin');
+}

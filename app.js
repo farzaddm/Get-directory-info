@@ -2,7 +2,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const authController = require("./controller/authController");
 const controller = require("./controller/controller");
-const { requireAuth, checkRole } = require("./middleware/authMiddleware");
+const { requireAuth, checkRole, setAuthStatus } = require("./middleware/authMiddleware");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 //=====================================================================================
@@ -15,16 +15,19 @@ app.use(express.static("public"));
 app.use(cookieParser());
 app.use(bodyParser());
 
+// set authentications status for all routes to show button at the top
+app.use(setAuthStatus);
+
 // view engine
 app.set("view engine", "ejs");
 
 // routes
-app.get("/login", (req, res) => res.render("login"));
+app.get("/login", authController.login_get);
 app.post("/login", authController.login_post);
-app.get("/logout", authController.logout_get);
 app.get("/signup", authController.signup_get);
 app.post("/signup", authController.signup_post);
-
+app.get("/logout", authController.logout_get);
+app.get('/admin', requireAuth, checkRole('admin'), authController.admin_get)
 app.get("*", requireAuth, controller.processPathRequest);
 app.post("/upload", requireAuth, checkRole('admin'), upload.single("file"), (req, res) => {
   if (!req.file) {
