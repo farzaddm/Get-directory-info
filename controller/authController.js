@@ -46,11 +46,11 @@ module.exports.login_post = (req, res) => {
   });
 };
 
-module.exports.signup_get = (req, res) => {
-  res.render("signup");
+module.exports.addUser_get = (req, res) => {
+  res.render("admin/addUser");
 };
 
-module.exports.signup_post = async (req, res) => {
+module.exports.addUser_post = async (req, res) => {
   const { username, password } = req.body;
   try {
     await signupUser(username, password);

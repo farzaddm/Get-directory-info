@@ -9,7 +9,7 @@ module.exports.processPathRequest = (req, res) => {
 
   // check the role and only show user the home directory
   if (res.locals.role !== "admin" && !currentPath.startsWith(baseUserDir)) {
-    return res.status(403).send("Access denied, You can only see '/home'");
+    return res.redirect(baseUserDir);
   }
 
   // checking the path is for directory or file
