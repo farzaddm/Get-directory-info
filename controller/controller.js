@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 //===================================================================================
+
 const baseUserDir = "/home";
 
 module.exports.processPathRequest = (req, res) => {
@@ -25,19 +26,10 @@ module.exports.processPathRequest = (req, res) => {
         }
 
         // not showing hidden files
-        const directories = files
-          .filter((file) => file.isDirectory() && !file.name.startsWith("."))
-          .map((file) => file.name);
-        const fileNames = files
-          .filter((file) => !file.isDirectory() && !file.name.startsWith("."))
-          .map((file) => file.name);
+        const directories = files.filter((file) => file.isDirectory() && !file.name.startsWith(".")).map((file) => file.name);
+        const fileNames = files.filter((file) => !file.isDirectory() && !file.name.startsWith(".")).map((file) => file.name);
 
-        res.render("home", {
-          currentPath: req.path,
-          directories,
-          fileNames,
-          path,
-        });
+        res.render("home", {currentPath: req.path, directories, fileNames, path,});
       });
     }
     // path is file
@@ -63,3 +55,4 @@ module.exports.processPathRequest = (req, res) => {
     }
   });
 };
+

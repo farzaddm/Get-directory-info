@@ -1,0 +1,35 @@
+<%- include('../partials/header'); %>
+
+<div class="container">
+<h2>User Login History</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Log ID</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Login Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% logins.forEach(log=> { %>
+            <tr>
+                <td>
+                    <%= log.id %>
+                </td>
+                <td>
+                    <%= log.username %>
+                </td>
+                <td>
+                    <%= log.role %>
+                </td>
+                <td>
+                    <%= new Date(log.loginTime).toLocaleString() %>
+                </td>
+            </tr>
+            <% }); %>
+    </tbody>
+</table>
+</div>
+
+<%- include('../partials/footer') %>

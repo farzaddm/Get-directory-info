@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const bcrypt = require("bcrypt");
-const { checkUser, signupUser } = require("../database/database");
+const { checkUser, signupUser, insertLogin } = require("../database/database");
 //===================================================================================
 
 //create json web token
@@ -28,8 +28,16 @@ module.exports.login_post = (req, res) => {
     if (user) {
       console.log("User exists and password matched!");
       const token = createToken(username, user.role);
+
       res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
-      res.status(200).json({ user: username });
+
+      const now = new Date().toISOString();
+      insertLogin(user.username, now, (err) => {
+        if (err) {
+          return res.status(500).send("Database error");
+        }
+        res.status(200).json({ user: user.username, role: user.role });
+      });
     } else {
       // send status 400 for when it's not authenticated
       console.log("Invalid username or password.");
@@ -60,5 +68,5 @@ module.exports.logout_get = (req, res) => {
 };
 
 module.exports.admin_get = (req, res) => {
-  res.render('admin');
-}
+  res.render("admin");
+};

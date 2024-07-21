@@ -1,4 +1,4 @@
-<%- include('partials/header.ejs'); %>
+<%- include('partials/header'); %>
 
 <form>
     <h2>Login</h2>
@@ -34,7 +34,12 @@
                 console.log(data.errors);
             }
             if (data.user) {
-                location.assign('/');
+                if (data.role === 'admin') {
+                    location.assign('/admin');
+
+                } else {
+                    location.assign('/');
+                }
             }
         } catch (err) {
             console.log(err);
@@ -42,4 +47,4 @@
 
     })
 </script>
-<%- include('partials/footer.ejs'); %>
+<%- include('partials/footer'); %>

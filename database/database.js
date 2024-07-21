@@ -10,10 +10,7 @@ const db = new sqlite3.Database("./database/database.db");
 async function checkUser(username, password, callback) {
   try {
     const row = await new Promise((resolve, reject) => {
-      db.get(
-        "SELECT password, role FROM user WHERE username = ?",
-        [username],
-        (err, row) => {
+      db.get("SELECT password, role FROM user WHERE username = ?", [username], (err, row) => {
           // operation failed
           if (err) reject(err);
           // operation was succesful
@@ -31,8 +28,6 @@ async function checkUser(username, password, callback) {
   } catch (err) {
     return callback(err);
   }
-  // colse database
-  db.close();
 }
 
 async function signupUser(username, password) {
@@ -61,4 +56,17 @@ async function signupUser(username, password) {
   });
 }
 
-module.exports = { checkUser, signupUser };
+const insertLogin = (username, loginTime, callback) => {
+  db.run("INSERT INTO logins (username, loginTime) VALUES (?, ?)", [username, loginTime], callback);
+};
+
+const getLoginHistory = (callback) => {
+  db.all(
+    `SELECT logins.id, user.username, user.role, logins.loginTime 
+    FROM logins 
+    JOIN user ON logins.username = user.username
+    ORDER BY logins.loginTime DESC`
+  , [], callback);
+};
+
+module.exports = { checkUser, signupUser, insertLogin, getLoginHistory };

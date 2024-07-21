@@ -1,11 +1,15 @@
-<%- include('partials/header.ejs'); %>
+<%- include('partials/header'); %>
 
 <div class="container">
     <h1>Admin Panel</h1>
 
     <ul>
+        <li><a href="/">Root</a></li>
         <li><a href="/admin/manage-users">Manage Users</a></li>
         <li><a href="/admin/settings">Settings</a></li>
+        <li><a href="/admin/login-history">User Login History</a></li>
 
     </ul>
 </div>
+
+<%- include('partials/footer') %>
