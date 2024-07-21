@@ -140,6 +140,12 @@ header h3 {
   color: var(--header-color);
 }
 
+footer{
+  text-align: center;
+  margin-top: 120px;
+  color: #aaa;
+}
+
 header .btn {
   margin-top: 20px;
   padding: 12px 18px;
