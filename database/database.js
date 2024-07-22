@@ -7,7 +7,7 @@ const { hashPassword } = require("../utils/getHashedPassword");
 // open database
 const db = new sqlite3.Database("./database/database.db");
 
-async function checkUser(username, password, callback) {
+module.exports.checkUser = async(username, password, callback) => {
   try {
     const row = await new Promise((resolve, reject) => {
       db.get("SELECT password, role FROM user WHERE username = ?", [username], (err, row) => {
@@ -30,7 +30,7 @@ async function checkUser(username, password, callback) {
   }
 }
 
-async function signupUser(username, password) {
+module.exports.signupUser = async(username, password) => {
   let userHashedPassword;
 
   await hashPassword(password)
@@ -56,11 +56,12 @@ async function signupUser(username, password) {
   });
 }
 
-const insertLogin = (username, loginTime, callback) => {
+// save the user's login
+module.exports.insertLogin = (username, loginTime, callback) => {
   db.run("INSERT INTO logins (username, loginTime) VALUES (?, ?)", [username, loginTime], callback);
 };
 
-const getLoginHistory = (callback) => {
+module.exports.getLoginHistory = (callback) => {
   db.all(
     `SELECT logins.id, user.username, user.role, logins.loginTime 
     FROM logins 
@@ -69,4 +70,90 @@ const getLoginHistory = (callback) => {
   , [], callback);
 };
 
-module.exports = { checkUser, signupUser, insertLogin, getLoginHistory };
+module.exports.deleteUser = (username, callback) => {
+  db.run("DELETE FROM user WHERE username = ?", [username], (err) => {
+    callback(err);
+  });
+};
+
+// تابع برای اعطای دسترسی
+module.exports.grantAccess = (username, accessType, duration) => {
+  return new Promise((resolve, reject) => {
+    const deleteQuery = `
+      DELETE FROM access 
+      WHERE username = ? AND access_type = ?
+    `;
+    
+    db.run(deleteQuery, [username, accessType], (err) => {
+      if (err) {
+        return reject(err);
+      }
+
+      const insertQuery = `
+        INSERT INTO access (username, access_type, expiration_duration) 
+        VALUES (?, ?, ?)
+      `;
+      
+      db.run(insertQuery, [username, accessType, duration], function(err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(this.lastID);
+        }
+      });
+    });
+  });
+};
+
+module.exports.getUserAccess = (username, accessType) => {
+  return new Promise((resolve, reject) => {
+    const currentTime = Date.now();
+    const query = `
+      SELECT * FROM access 
+      WHERE username = ? AND access_type = ? 
+    `;
+
+    db.get(query, [username, accessType], (err, row) => {
+      if (err) {
+        reject(err);
+      } else {
+        if (row) {
+          const expirationTime = new Date(row.created_at).getTime() + row.expiration_duration * 60 * 60 * 1000;
+          if (currentTime < expirationTime) {
+            resolve(row);
+          } else {
+            resolve(null);
+          }
+        } else {
+          resolve(null);
+        }
+      }
+    });
+  });
+};
+
+// تابع برای گرفتن اطلاعات یوزرها
+module.exports.getUsers = (callback) => {
+  db.all("SELECT * FROM user", (err, rows) => {
+    callback(err, rows);
+  });
+};
+
+// تابع برای حذف دسترسی‌های منقضی شده
+module.exports.cleanExpiredAccess = () => {
+  return new Promise((resolve, reject) => {
+    const currentTime = Date.now();
+    const query = 
+      `DELETE FROM access 
+      WHERE (strftime('%s', 'now') - strftime('%s', created_at)) > expiration_duration * 3600
+    ;`
+    
+    db.run(query, function(err) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(this.changes); // تعداد ردیف‌های حذف شده
+      }
+    });
+  });
+};

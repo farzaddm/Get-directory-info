@@ -21,13 +21,13 @@
         </li>
       <% }); %>
     </ul>
-    <% if (role === 'admin') { %>
-    <h2>Upload File</h2>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-      <input type="file" name="file">
-      <button type="submit">Upload</button>
-    </form>
-    <% } %>
+    <% if (role === 'admin' || hasUploadAccess) { %>
+      <h2>Upload File</h2>
+      <form class="signupAndLogin" action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <button type="submit">Upload</button>
+      </form>
+    <% } %>    
     <script>
       // Get the URL parameters
       const urlParams = new URLSearchParams(window.location.search);

@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { ConsoleMessage } = require("puppeteer-firefox/lib/api");
 //===========================================================================================
 
 const requireAuth = (req, res, next) => {
@@ -37,12 +38,13 @@ const setAuthStatus = (req, res, next) => {
   res.locals.isAuthenticated = false;
   res.locals.role = null;
   if (token) {
-      jwt.verify(token, 'farzad dehghan', (err, decodedToken) => {
-          if (!err) {
-            res.locals.isAuthenticated = true;
-            res.locals.role = decodedToken.role;
-          }
-      });
+    jwt.verify(token, "farzad dehghan", (err, decodedToken) => {
+      if (!err) {
+        res.locals.isAuthenticated = true;
+        res.locals.role = decodedToken.role;
+        res.locals.username = decodedToken.id;
+      }
+    });
   }
   next();
 };

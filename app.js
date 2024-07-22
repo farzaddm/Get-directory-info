@@ -3,13 +3,11 @@ const cookieParser = require("cookie-parser");
 const authController = require("./controller/authController");
 const controller = require("./controller/directoryController");
 const adminController = require("./controller/adminController");
-const {
-  requireAuth,
-  checkRole,
-  setAuthStatus,
-} = require("./middleware/authMiddleware");
+const { requireAuth, checkRole, setAuthStatus, } = require("./middleware/authMiddleware");
 const bodyParser = require("body-parser");
 const multer = require("multer");
+const cron = require("node-cron");
+const db = require("./database/database");
 //=====================================================================================
 
 const app = express();
@@ -26,6 +24,24 @@ app.use(setAuthStatus);
 // view engine
 app.set("view engine", "ejs");
 
+// زمان‌بندی اسکریپت برای اجرا هر ساعت
+cron.schedule("0 * * * *", () => {
+  console.log("Running cron job to remove expired access");
+  db.removeExpiredAccess((err) => {
+    if (err) {
+      console.error("Error removing expired access:", err);
+    } else {
+      console.log("Expired access removed successfully.");
+    }
+  });
+});
+
+// Serve favicon.ico
+app.get('/favicon.ico', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'favicon.ico'));
+});
+
+// ------------------------------------------------------------------------------------------------
 // routes
 app.get("/login", authController.login_get);
 app.post("/login", authController.login_post);
@@ -35,21 +51,15 @@ app.get("/logout", authController.logout_get);
 
 // admin
 app.get("/admin", requireAuth, checkRole("admin"), authController.admin_get);
-app.get(
-  "/admin/login-history",
-  requireAuth,
-  checkRole("admin"),
-  adminController.getUsers
-);
+app.get("/admin/login-history", requireAuth, checkRole("admin"), adminController.getUsers);
+app.get("/admin/manage-users", requireAuth, checkRole("admin"), adminController.manageUsers_get);
+app.post("/admin/delete-user", requireAuth, checkRole("admin"), adminController.deleteUser_post);
+app.post("/admin/grant-access", requireAuth, checkRole("admin"), adminController.grantAccess_post);
+
 
 // main functions
 app.get("*", requireAuth, controller.processPathRequest);
-app.post(
-  "/upload",
-  requireAuth,
-  checkRole("admin"),
-  upload.single("file"),
-  (req, res) => {
+app.post("/upload", requireAuth, checkRole("admin"), upload.single("file"), (req, res) => {
     if (!req.file) {
       return res.status(400).send("No file uploaded.");
     }
@@ -57,6 +67,7 @@ app.post(
   }
 );
 
+// ---------------------------------------------------------------------------
 // setup server
 app.listen(3026, () => {
   console.log(`Server is running on port 3026`);

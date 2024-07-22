@@ -1,6 +1,6 @@
 <%- include('partials/header'); %>
 
-<form>
+<form class="signupAndLogin">
     <h2>Login</h2>
     <label for="username">Username</label>
     <input type="text" name="username" required />
@@ -15,7 +15,6 @@
     const form = document.querySelector('form');
 
     form.addEventListener('submit', async (e) => {
-        // جلوگیری از رفتار پیش‌فرض ارسال فرم
         e.preventDefault();
 
         // get value

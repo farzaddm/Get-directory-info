@@ -1,0 +1,98 @@
+<%- include('../partials/header'); %>
+
+<h1>Manage Users</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Role</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% users.forEach(user => { %>
+      <tr>
+        <td><%= user.username %></td>
+        <td><%= user.role %></td>
+        <td>
+          <form class="user-actions-form">
+            <input type="hidden" name="username" value="<%= user.username %>">
+            
+            <div class="access-controls">
+              <select name="accessType">
+                <option value="download">Grant Download</option>
+                <option value="upload">Grant Upload</option>
+              </select>
+              <input type="number" name="duration" placeholder="Hours" min="1" required>
+            </div>
+          
+            <button type="submit" class="grant-button">Grant Access</button>
+          
+          </form>
+          <form class="delete-form">
+            <input type="hidden" name="username" value="<%= user.username %>">
+            <button type="submit" class="delete-button">Delete</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+<%- include('../partials/footer'); %>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.delete-form').forEach(form => {
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const username = form.querySelector('input[name="username"]').value;
+        
+        try {
+          const response = await fetch('/admin/delete-user', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username })
+          });
+
+          if (response.ok) {
+            location.reload()
+          } else {
+            console.error('Failed to delete user');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      });
+    });
+
+    document.querySelectorAll('.user-actions-form').forEach(form => {
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const username = form.querySelector('input[name="username"]').value;
+        const accessType = form.querySelector('select[name="accessType"]').value;
+        const duration = form.querySelector('input[name="duration"]').value;
+        
+        try {
+          const response = await fetch('/admin/grant-access', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, accessType, duration })
+          });
+          
+          if (response.ok) {
+            console.log('Access granted successfully');
+          } else {
+            console.error('Failed to grant access');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      });
+    });
+  });
+</script>

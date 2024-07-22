@@ -1,18 +1,15 @@
 <%- include('partials/header'); %>
 
-
-  <body>
-    <% if (role === 'admin') { %>
-      <a href="<%= path.join(currentPath) %>?download=true" class="btn">Download</a>
-      <% } %>
-        <h2>File Content: <%= currentPath %>
-        </h2>
-        <br>
-        <hr>
-        <pre><%= content %></pre>
-        <br>
-        <a href="<%= path.dirname(currentPath) %>">Back</a>
-  </body>
-
+<body>
+  <% if (role === 'admin' || hasDownloadAccess ) { %>
+    <a href="<%= path.join(currentPath) %>?download=true" class="btn">Download</a>
+  <% } %>
+  <h2>File Content: <%= currentPath %></h2>
+  <br>
+  <hr>
+  <pre><%= content %></pre>
+  <br>
+  <a href="<%= path.dirname(currentPath) %>">Back</a>
+</body>
 
 <%- include('partials/footer'); %>

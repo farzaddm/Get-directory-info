@@ -1,5 +1,5 @@
 <%- include('../partials/header'); %>
-<form>
+<form class="signupAndLogin">
     <h2>sign up</h2>
     <label for="username">Username</label>
     <input type="text" name="username" required />
@@ -19,9 +19,9 @@
         // get the value
         const username = form.username.value;
         const password = form.password.value;
-
+        console.log(username, password);
         try {
-            const res = await fetch('/signup', {
+            const res = await fetch('/add-user', {
                 method: 'POST',
                 body: JSON.stringify({ username, password}),
                 headers: { 'Content-Type': 'application/json' }
@@ -32,7 +32,7 @@
                 console.log(data.errors);
             }
             if (data.user) {
-                location.assign('/login');
+                location.assign('/admin');
             }
         } catch (err) {
             console.log(err);

@@ -1,12 +1,40 @@
 const fs = require("fs");
 const path = require("path");
+const db = require("../database/database");
+const { error } = require("console");
 //===================================================================================
 
 const baseUserDir = "/home";
 
-module.exports.processPathRequest = (req, res) => {
+module.exports.processPathRequest = async(req, res) => {
   const currentPath = path.join("/", req.path);
+  const username = res.locals.username;
 
+  // delete expired rows
+  try {
+    await db.cleanExpiredAccess();
+  } catch (error) {
+    console.error("Error cleaning expired access: ", error);
+  }
+
+  // check if user have any axtra access
+  res.locals.hasDownloadAccess = false;
+  res.locals.hasUploadAccess = false;
+  try {
+    const downloadResult = await db.getUserAccess(username, 'download');
+    if (downloadResult && downloadResult.access_type) {
+      res.locals.hasDownloadAccess = true;
+    }
+
+    const uploadResult = await db.getUserAccess(username, 'upload');
+    if (uploadResult && uploadResult.access_type) {
+      res.locals.hasUploadAccess = true;
+    }
+  } catch (error) {
+    console.error("Error fetching user access: ", error);
+    return res.status(500).send("Internal Server Error");
+  }
+  
   // check the role and only show user the home directory
   if (res.locals.role !== "admin" && !currentPath.startsWith(baseUserDir)) {
     return res.redirect(baseUserDir);
