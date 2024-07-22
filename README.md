@@ -24,12 +24,12 @@ Ensure you have Node.js and npm installed on your system.
     ```sh
     npm install
     ```
-3. **Add user credentials:**
-   Add your username, password, and role (admin/user) in `database/database.db`. Note that only admins can upload files to the server.
-4. **Run the project:**
+3. **Run the project:**
    ```sh
     node app.js
    ```
+4. **Set up Admin:**
+   Go to `/setup` and setup admin account.
 
 ## Usage
 To run the application on your server and keep it active indefinitely, consider using `tmux`. Access the application anytime by navigating to `http://serverIp:3026`.
@@ -43,28 +43,42 @@ To run the application on your server and keep it active indefinitely, consider 
 
 ```bash
 myandpp
-|__controller                               # contains controller files
-|       |__controller.js                    # process path request
-|       |__authController.js                # login and logout functions
-|__database                                 # contains database files
-|       |__database.js                      # sqlite file and querys
-|       |__database.db                      # my tables
+|__controller
+|       |__directoryController.js           # Process path request
+|       |__authController.js                # Login and logout functions
+|       |__adminController.js               # Admin panel functions
+|       |__setupController.js               # Functions for running site for first time(setting up admin)
+|__database
+|       |__database.js                      # Sqlite file and querys
+|       |__database.db                      
 |__doc
 |__middleware                               
-|       |__authMiddleware.js                # middleware for checking authentications
+|       |__authMiddleware.js                # Middleware for checking authentications
 |__public
-|    |__d_bg.jpg                            # background for dark theme
-|    |__l_bg.jpg                            # background for light theme
+|    |__pic                            
+|    |   |__ligthBackground.jpg
+|    |   |__darkBackground.jpg
 |    |__style.css
+|    |__favicon.ico
 |__test
-|__uploads                                  # uploaded files will be in it
-|__views                                    # all ejs files
+|    |__authController.test.js              # Unit test for authController.js
+|__uploads                                  # Uploaded files will be in it
+|__utils
+|    |__getHashedPassword.js
+|__views
+|    |__admin
+|    |      |__addUser.ejs
+|    |      |__loginHistory.ejs
+|    |      |__manageUsers.ejs
 |    |__partilas
 |    |      |__header.ejs
-|    |__file.ejs                            # content of files will be shown on it
-|    |__home.ejs                            # home page
-|    |__login.ejs                           # login page
-|__app.js                                   # express server
+|    |      |__footer.ejs
+|    |__file.ejs                            # Content of files will be shown on it
+|    |__home.ejs                            # Root of system(list of directorys will be shown in it)                    
+|    |__login.ejs
+|    |__admin.ejs                           # Admin panel
+|    |__setup.ejs                           # Will be shown first time that server runs                     
+|__app.js                                   # Express server
 |__README.md 
 |__package-lock.json
 |__package.json                                 

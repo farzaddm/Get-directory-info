@@ -11,7 +11,7 @@
   --button-background: #FEE996;
   --button-text: #000;
   --header-color: #999;
-  --background-image: url("./l_bg.jpg");
+  --background-image: url("./pic/ligthBackground.jpg");
 }
 
 body.dark-theme {
@@ -23,7 +23,7 @@ body.dark-theme {
   --button-background: #ff6666;
   --button-text: #000;
   --header-color: #ff6666;
-  --background-image: url("./d_bg.jpg");
+  --background-image: url("./pic/darkBackground.jpg");
 }
 
 body {
