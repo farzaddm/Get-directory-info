@@ -7,7 +7,7 @@ const { hashPassword } = require("../utils/getHashedPassword");
 // open database
 const db = new sqlite3.Database("./database/database.db");
 
-module.exports.checkUser = async(username, password, callback) => {
+module.exports.checkUser = async (username, password, callback) => {
   try {
     const row = await new Promise((resolve, reject) => {
       db.get("SELECT password, role FROM user WHERE username = ?", [username], (err, row) => {
@@ -18,7 +18,6 @@ module.exports.checkUser = async(username, password, callback) => {
         }
       );
     });
-
     if (!row) {
       return callback(null, false);
     }
@@ -56,6 +55,16 @@ module.exports.signupUser = async(username, password) => {
   });
 }
 
+module.exports.signupAdmin = (username, password, role, callback) => {
+  db.run(
+    "INSERT INTO user (username, password, role) VALUES (?, ?, ?)",
+    [username, password, role],
+    (err) => {
+      callback(err);
+    }
+  );
+};
+
 // save the user's login
 module.exports.insertLogin = (username, loginTime, callback) => {
   db.run("INSERT INTO logins (username, loginTime) VALUES (?, ?)", [username, loginTime], callback);
@@ -71,11 +80,38 @@ module.exports.getLoginHistory = (callback) => {
 };
 
 module.exports.deleteUser = (username, callback) => {
-  db.run("DELETE FROM user WHERE username = ?", [username], (err) => {
-    callback(err);
+  db.serialize(() => {
+    db.run("BEGIN TRANSACTION");
+
+    db.run("DELETE FROM access WHERE username = ?", [username], (err) => {
+      if (err) {
+        return db.run("ROLLBACK", () => {
+          callback(err);
+        });
+      }
+    });
+
+    db.run("DELETE FROM logins WHERE username = ?", [username], (err) => {
+      if (err) {
+        return db.run("ROLLBACK", () => {
+          callback(err);
+        });
+      }
+    });
+
+    db.run("DELETE FROM user WHERE username = ?", [username], (err) => {
+      if (err) {
+        return db.run("ROLLBACK", () => {
+          callback(err);
+        });
+      } else {
+        db.run("COMMIT", (err) => {
+          callback(err);
+        });
+      }
+    });
   });
 };
-
 // تابع برای اعطای دسترسی
 module.exports.grantAccess = (username, accessType, duration) => {
   return new Promise((resolve, reject) => {
@@ -145,10 +181,10 @@ module.exports.cleanExpiredAccess = () => {
     const currentTime = Date.now();
     const query = 
       `DELETE FROM access 
-      WHERE (strftime('%s', 'now') - strftime('%s', created_at)) > expiration_duration * 3600
+      WHERE (strftime('%s', ?) - strftime('%s', created_at)) > expiration_duration * 3600
     ;`
     
-    db.run(query, function(err) {
+    db.run(query, [currentTime,], function(err) {
       if (err) {
         reject(err);
       } else {
