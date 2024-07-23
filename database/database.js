@@ -112,7 +112,7 @@ module.exports.deleteUser = (username, callback) => {
     });
   });
 };
-// تابع برای اعطای دسترسی
+// give user extra access
 module.exports.grantAccess = (username, accessType, duration) => {
   return new Promise((resolve, reject) => {
     const deleteQuery = `
@@ -140,7 +140,7 @@ module.exports.grantAccess = (username, accessType, duration) => {
     });
   });
 };
-
+// check if user has any axtra access
 module.exports.getUserAccess = (username, accessType) => {
   return new Promise((resolve, reject) => {
     const currentTime = Date.now();
@@ -168,27 +168,28 @@ module.exports.getUserAccess = (username, accessType) => {
   });
 };
 
-// تابع برای گرفتن اطلاعات یوزرها
+// get user information
 module.exports.getUsers = (callback) => {
   db.all("SELECT * FROM user", (err, rows) => {
     callback(err, rows);
   });
 };
 
-// تابع برای حذف دسترسی‌های منقضی شده
+// delete the expired accesses
 module.exports.cleanExpiredAccess = () => {
   return new Promise((resolve, reject) => {
-    const currentTime = Date.now();
-    const query = 
-      `DELETE FROM access 
-      WHERE (strftime('%s', ?) - strftime('%s', created_at)) > expiration_duration * 3600
-    ;`
+    const currentTime = new Date().toISOString();
+
+    const query = `
+      DELETE FROM access 
+      WHERE (strftime('%s', ?) - strftime('%s', created_at)) > expiration_duration * 3600;
+    `;
     
-    db.run(query, [currentTime,], function(err) {
+    db.run(query, [currentTime], function(err) {
       if (err) {
         reject(err);
       } else {
-        resolve(this.changes); // تعداد ردیف‌های حذف شده
+        resolve(this.changes); 
       }
     });
   });
