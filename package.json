@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@sequelize/cli": "^7.0.0-alpha.41",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "download": "^8.0.0",

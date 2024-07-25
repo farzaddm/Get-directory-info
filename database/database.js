@@ -1,6 +1,5 @@
 const sqlite3 = require("sqlite3").verbose();
 const bcrypt = require("bcrypt");
-const { reject } = require("lodash");
 const { hashPassword } = require("../utils/getHashedPassword");
 //===============================================================================
 
