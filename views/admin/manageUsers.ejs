@@ -58,7 +58,7 @@
           });
 
           if (response.ok) {
-            location.reload()
+            location.reload();
           } else {
             console.error('Failed to delete user');
           }
@@ -86,6 +86,7 @@
           
           if (response.ok) {
             console.log('Access granted successfully');
+            location.reload();
           } else {
             console.error('Failed to grant access');
           }

@@ -8,6 +8,7 @@ const { requireAuth, checkRole, setAuthStatus, } = require("./middleware/authMid
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const fs = require("fs");
+const path = require("path");
 //=====================================================================================
 
 const app = express();

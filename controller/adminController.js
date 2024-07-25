@@ -39,7 +39,7 @@ module.exports.grantAccess_post = async (req, res) => {
 
   try {
     await db.grantAccess(username, accessType, duration);
-    res.status(200).redirect('/admin/manage-users');
+    res.status(200).json({ message: 'Access granted successfully' });
   } catch (error) {
     console.error("Error granting access: ", error);
     res.status(500).send("Internal Server Error");
