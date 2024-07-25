@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const { ConsoleMessage } = require("puppeteer-firefox/lib/api");
 //===========================================================================================
 
 const requireAuth = (req, res, next) => {
