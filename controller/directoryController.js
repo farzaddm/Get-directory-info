@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const db = require("../database/database");
+const db = require("../database/index");
 const { error } = require("console");
 //===================================================================================
 

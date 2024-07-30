@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const bcrypt = require("bcrypt");
-const { checkUser, signupUser, insertLogin } = require("../database/database");
+const { checkUser, signupUser, insertLogin } = require("../database/index");
 //===================================================================================
 
 //create json web token
@@ -22,7 +22,7 @@ module.exports.login_post = (req, res) => {
   // check authentication
   checkUser(username, password, (err, user) => {
     if (err) {
-      return console.error(err.message);
+      return res.status(500).json({ errors: err.message});
     }
 
     if (user) {
