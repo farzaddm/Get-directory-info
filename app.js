@@ -50,7 +50,7 @@ app.post("/login", authController.login_post);
 app.get("/add-user", authController.addUser_get);
 app.post("/add-user", authController.addUser_post);
 app.get("/logout", authController.logout_get);
-
+  
 // admin
 app.get("/admin", requireAuth, checkRole("admin"), authController.admin_get);
 app.get("/admin/login-history", requireAuth, checkRole("admin"), adminController.usersHistory_get);
