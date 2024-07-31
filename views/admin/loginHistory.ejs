@@ -5,31 +5,26 @@
 <table>
     <thead>
         <tr>
-            <th>Log ID</th>
             <th>Username</th>
             <th>Role</th>
+            <th>Device</th>
+            <th>IP Address</th>
+            <th>Browser</th>
             <th>Login Time</th>
         </tr>
     </thead>
     <tbody>
-        <% logins.forEach(log=> { %>
+        <% logins.forEach(function(login) { %>
             <tr>
-                <td>
-                    <%= log.id %>
-                </td>
-                <td>
-                    <%= log.username %>
-                </td>
-                <td>
-                    <%= log.role %>
-                </td>
-                <td>
-                    <%= new Date(log.loginTime).toLocaleString() %>
-                </td>
+                <td><%= login.User.username %></td>
+                <td><%= login.User.role %></td>
+                <td><%= login.device %></td>
+                <td><%= login.ip %></td>
+                <td><%= login.browser %></td>
+                <td><%= login.loginTime %></td>
             </tr>
-            <% }); %>
+        <% }); %>
     </tbody>
-</table>
-</div>
+</table></div>
 
 <%- include('../partials/footer') %>

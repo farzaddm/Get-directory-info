@@ -1,7 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 const db = require("../database/index");
-const { error } = require("console");
 //===================================================================================
 
 const baseUserDir = "/home";
@@ -40,6 +39,9 @@ module.exports.processPathRequest = async(req, res) => {
     return res.redirect(baseUserDir);
   }
 
+  // show user favorite dir
+  const favoriteDirPath = await db.getFavoriteDirectory(username);
+
   // checking the path is for directory or file
   fs.stat(currentPath, (err, stats) => {
     if (err) {
@@ -57,13 +59,14 @@ module.exports.processPathRequest = async(req, res) => {
         const directories = files.filter((file) => file.isDirectory() && !file.name.startsWith(".")).map((file) => file.name);
         const fileNames = files.filter((file) => !file.isDirectory() && !file.name.startsWith(".")).map((file) => file.name);
 
-        res.render("home", {currentPath: req.path, directories, fileNames, path,});
+        res.render("home", {currentPath: req.path, directories, fileNames, path, favoriteDirPath});
       });
     }
     // path is file
     else if (stats.isFile()) {
       // Check if the request is to download the file
       if (req.query.download) {
+        db.logDownload(username, path.dirname(currentPath));
         res.download(currentPath, path.basename(currentPath), (err) => {
           if (err) {
             return res.status(500).send("Unable to download file");

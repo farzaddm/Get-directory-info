@@ -53,7 +53,7 @@ app.get("/logout", authController.logout_get);
 
 // admin
 app.get("/admin", requireAuth, checkRole("admin"), authController.admin_get);
-app.get("/admin/login-history", requireAuth, checkRole("admin"), adminController.getUsers);
+app.get("/admin/login-history", requireAuth, checkRole("admin"), adminController.usersHistory_get);
 app.get("/admin/manage-users", requireAuth, checkRole("admin"), adminController.manageUsers_get);
 app.post("/admin/delete-user", requireAuth, checkRole("admin"), adminController.deleteUser_post);
 app.post("/admin/grant-access", requireAuth, checkRole("admin"), adminController.grantAccess_post);

@@ -1,6 +1,7 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize, Op } = require('sequelize');
 const path = require('path');
 const bcrypt = require('bcrypt');
+// =============================================================
 
 // connect to database
 const sequelize = new Sequelize({
@@ -12,11 +13,13 @@ const sequelize = new Sequelize({
 const User = require('../models/user')(sequelize);
 const Access = require('../models/access')(sequelize);
 const Login = require('../models/login')(sequelize);
+const Download = require("../models/download")(sequelize);
 
 // relationships
 User.associate({ Access, Login });
 Access.associate({ User });
 Login.associate({ User });
+Download.associate({ User });
 
 sequelize.sync()
   .then(() => {
@@ -67,12 +70,12 @@ module.exports = {
     }
   },
 
-  insertLogin: (username, loginTime, callback) => {
-    Login.create({ username, loginTime })
+  insertLogin: (username, loginTime, device, ip, browser, callback) => {
+    Login.create({ username, loginTime, device, ip, browser })
       .then(() => callback(null))
       .catch(callback);
   },
-
+  
   getLoginHistory: (callback) => {
     Login.findAll({
       include: [{ model: User, attributes: ['username', 'role'] }],
@@ -130,12 +133,32 @@ module.exports = {
 
   cleanExpiredAccess: async () => {
     try {
-      const currentTime = new Date().toISOString();
+      const currentTime = Math.floor(Date.now() / 1000);
+  
       await Access.destroy({
-        where: sequelize.literal(`strftime('%s', '${currentTime}') - strftime('%s', created_at)) > expiration_duration * 3600`)
+        where: sequelize.literal(strftime('%s', 'now') - strftime('%s', created_at) > expiration_duration * 3600)
       });
     } catch (err) {
-      throw new Error(err);
+      throw new Error('Error cleaning expired access: ' + err.message);
     }
+  },
+
+  logDownload: async(username, directory) => {
+    const existingLog = await Download.findOne({ where: { username, directory } });
+  
+    if (existingLog) {
+      await existingLog.increment('downloadCount');
+    } else {
+      await Download.create({ username, directory });
+    }
+  },
+
+  getFavoriteDirectory: async(username) => {
+    const favorite = await Download.findOne({
+      where: { username },
+      order: [['downloadCount', 'DESC']],
+    });
+  
+    return favorite ? favorite.directory : null;
   }
 };

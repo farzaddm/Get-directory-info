@@ -9,6 +9,18 @@ module.exports = (sequelize) => {
     loginTime: {
       type: DataTypes.DATE,
       allowNull: false
+    },
+    device: {
+      type: DataTypes.STRING, // اطلاعات user-agent مانند دستگاه
+      allowNull: false
+    },
+    ip: {
+      type: DataTypes.STRING, // آدرس IP کاربر
+      allowNull: false
+    },
+    browser: {
+      type: DataTypes.STRING, // نوع مرورگر کاربر
+      allowNull: false
     }
   });
 

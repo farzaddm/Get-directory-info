@@ -2,7 +2,7 @@ const db = require("../database/index");
 // ==============================================================
 
 
-module.exports.getUsers = (req, res) => {
+module.exports.usersHistory_get = (req, res) => {
   db.getLoginHistory((err, rows) => {
     if (err) {
       return res.status(500).send("Database error");

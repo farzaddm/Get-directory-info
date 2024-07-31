@@ -7,6 +7,10 @@
     <% if (currentPath !== '/') { %>
         <h2><a href="<%= path.dirname(currentPath) %>">[UP] ..</a></h2>
     <% } %>
+    <% if (favoriteDirPath) { %>
+      <h2>Favorite Dir</h2>
+      <a href="<%=  path.join(currentPath, favoriteDirPath) %>"> [DIR] <%= favoriteDirPath %></a>
+      <% } %>
     <h2>Directories</h2>
     <ul>
       <% directories.forEach(dir => { %>

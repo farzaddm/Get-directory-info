@@ -1,5 +1,4 @@
 const db = require("../database/index");
-const { hashPassword } = require("../utils/getHashedPassword");
 const { setSetupComplete } = require("../utils/setupStatus");
 const fs = require("fs");
 // =======================================================================

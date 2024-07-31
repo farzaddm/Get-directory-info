@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
-const fs = require("fs");
-const bcrypt = require("bcrypt");
 const { checkUser, signupUser, insertLogin } = require("../database/index");
+const useragent = require('useragent');
+const requestIp = require('request-ip');
 //===================================================================================
 
 //create json web token
@@ -19,10 +19,16 @@ module.exports.login_get = (req, res) => {
 module.exports.login_post = (req, res) => {
   const { username, password } = req.body;
 
-  // check authentication
+  // دریافت اطلاعات دستگاه و مرورگر
+  const agent = useragent.parse(req.headers['user-agent']);
+  const device = agent.toString(); // اطلاعات دستگاه و مرورگر به صورت رشته
+  const browser = agent.toAgent(); // نوع مرورگر
+  const ip = requestIp.getClientIp(req); // دریافت IP کاربر
+
+  // چک کردن اعتبارسنجی
   checkUser(username, password, (err, user) => {
     if (err) {
-      return res.status(500).json({ errors: err.message});
+      return res.status(500).json({ errors: err.message });
     }
 
     if (user) {
@@ -32,14 +38,14 @@ module.exports.login_post = (req, res) => {
       res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
 
       const now = new Date().toISOString();
-      insertLogin(user.username, now, (err) => {
+      insertLogin(user.username, now, device, ip, browser, (err) => {
         if (err) {
           return res.status(500).send("Database error");
         }
         res.status(200).json({ user: user.username, role: user.role });
       });
     } else {
-      // send status 400 for when it's not authenticated
+      // ارسال وضعیت 400 وقتی که اعتبارسنجی موفق نباشد
       console.log("Invalid username or password.");
       res.status(400).json({ errors: "Failed to log in" });
     }
